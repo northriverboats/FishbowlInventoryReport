@@ -78,11 +78,11 @@ def default_filename():
     quarter = year_quarter(current.month, current.year)
     return f"Inventory Valuation Summary {quarter}"
 
-def read_firebird_database(host, include, exclude):
+def read_firebird_database(include, exclude):
     """Create Inventory Value Summary from Fishbowl"""
     stock = []
     con = fdb.connect(
-        host=host,
+        host=os.getenv('HOST'),
         database=os.getenv('DATABASE'),
         user=os.getenv('USER'),
         password=os.getenv("PASSWORD"),
@@ -200,8 +200,7 @@ class AppDialog(QWidget):
         # exit program
         include = ""
         exclude = ""
-        host_server = os.getenv('PRODUCTIONHOST')
-        rows = read_firebird_database(host_server, include, exclude)
+        rows = read_firebird_database(include, exclude)
         write_xlsx_file(rows, str(file_name))
         print(file_name)
         self.close()
